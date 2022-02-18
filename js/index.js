@@ -14,7 +14,7 @@ function allProducts() {
       let productsHtml = "";
       for (let value of values) {
         productsHtml += `
-                    <a href="./product.html?id=${value._id}">
+                    <a href="./html/product.html?id=${value._id}">
                         <article>
                         <img src=${value.imageUrl} alt=${value.altTxt}>
                         <h3 class="productName">${value.name}</h3>
