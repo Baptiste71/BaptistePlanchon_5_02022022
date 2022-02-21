@@ -1,5 +1,7 @@
 const productsSection = document.getElementById("items");
 
+// créer la requête GET pour selectionner tous les éléments de l'API
+
 allProducts();
 
 function allProducts() {
