@@ -48,26 +48,29 @@ const addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", (event) => {
   const colorChoice = document.getElementById("colors");
   const quantity = document.getElementById("quantity");
-  const choice = {
-    name: nameProduct,
-    price: priceProduct,
-    colors: colorsProduct,
-  };
+  const price = document.getElementById("price");
+  let newProduct = [
+    {
+      id: id,
+      color: colorChoice.value,
+      quantity: parseInt(quantity.value),
+      price: parseFloat(price.value * quantity.value),
+    },
+  ];
   // ajouter la couleur et la quantity <=100
   if (quantity.value > 0 && quantity.value <= 100) {
     let cartLocalStorage = localStorage.getItem("cart");
-    if (cartLocalStorage == null) {
-      let choices = [];
-      choices.push(choice);
-      localStorage.setItem("cart", JSON.stringify(choices));
-
-      //parcourir les resultats obtenus
+    let addNewProductinCart = JSON.parse(localStorage.getItem("cart"));
+    if (cartLocalStorage) {
+      addNewProductinCart.push(newProduct);
+      localStorage.setItem("cart", JSON.stringify(addNewProductinCart));
     } else {
       const arrayValue = [
         {
           id: id,
           color: colorChoice.value,
           quantity: parseInt(quantity.value),
+          price: parseInt(price.value * quantity.value),
         },
       ];
       localStorage.setItem("cart", JSON.stringify(arrayValue));
