@@ -44,6 +44,33 @@ if (cartLocalStorage === null) {
 
         cartFull.insertAdjacentHTML("afterbegin", productsInCart);
 
+        // modification de la quantité dans la page panier
+
+        const addArticleInCart = document.querySelector(".cart__item__content__settings__quantity");
+
+        addArticleInCart.addEventListener("click", (event) => {
+          const articleQuantity = document.querySelector(".itemQuantity");
+
+          if (cartLocalStorage) {
+            let indexFind = false;
+            for (let [index, productInCart] of cartLocalStorage.entries()) {
+              if (productInCart.quantity === productInLocalStorage.quantity && productInCart.id === productInLocalStorage.id) {
+                indexFind = true;
+
+                if (cartLocalStorage[index].quantity > parseInt(articleQuantity.value) <= 100 || cartLocalStorage[index].quantity < parseInt(articleQuantity.value) <= 100) {
+                  cartLocalStorage[index].quantity == parseInt(articleQuantity.value);
+                }
+              }
+            }
+            if (indexFind) {
+              localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+            } else {
+              cartLocalStorage.push(newProduct);
+              localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+            }
+          }
+        });
+
         // Suppression d'élément dans le panier
 
         const deleteItem = document.querySelector(".deleteItem");
