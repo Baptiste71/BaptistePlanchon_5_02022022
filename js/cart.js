@@ -1,4 +1,6 @@
 const cartFull = document.getElementById("cart__items");
+const totalArticleInCart = document.getElementById("totalQuantity");
+const totalPriceOfArticle = document.getElementById("totalPrice");
 
 // Recuperation des données du localStorage
 
@@ -54,18 +56,16 @@ if (cartLocalStorage === null) {
           if (cartLocalStorage) {
             let indexFind = false;
             for (let [index, productInCart] of cartLocalStorage.entries()) {
-              if (productInCart.quantity === productInLocalStorage.quantity && productInCart.id === productInLocalStorage.id) {
+              if (productInCart.quantity === [index, productInLocalStorage.quantity] && productInCart.id === productInLocalStorage.id) break;
+              {
                 indexFind = true;
 
-                if (cartLocalStorage[index].quantity > parseInt(articleQuantity.value) <= 100 || cartLocalStorage[index].quantity < parseInt(articleQuantity.value) <= 100) {
-                  cartLocalStorage[index].quantity == parseInt(articleQuantity.value);
+                if ([productInLocalStorage.quantity] > parseInt(articleQuantity.value) <= 100 || [productInLocalStorage.quantity] < parseInt(articleQuantity.value) <= 100) {
+                  [productInLocalStorage.quantity] === parseInt(articleQuantity.value);
                 }
               }
             }
             if (indexFind) {
-              localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
-            } else {
-              cartLocalStorage.push(newProduct);
               localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
             }
           }
@@ -84,6 +84,24 @@ if (cartLocalStorage === null) {
             JSON.stringify(localStorage.removeItem("cart"));
           }
         });
+
+        // Totaux des prix et articles dans le panier
+
+        let totalQuantity = [];
+
+        for (let article = 0; article < cartLocalStorage.length; article++) {
+          let quantityOfArticleInCart = cartLocalStorage[article].quantity;
+
+          totalQuantity.push(quantityOfArticleInCart);
+          console.log(totalQuantity);
+        }
+
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        const totalArticle = totalQuantity.reduce(reducer, 0);
+        console.log(totalArticle);
+
+        const totalQuantityHTML = `<span id="totalQuantity">${totalArticle}</span>`;
+        totalArticleInCart.insertAdjacentHTML("afterbegin", totalQuantityHTML);
       });
   }
 }
