@@ -55,16 +55,16 @@ if (cartLocalStorage === null) {
 
           if (cartLocalStorage) {
             let indexFind = false;
-            for (let [index, productInCart] of cartLocalStorage.entries()) {
-              if (productInCart.quantity === [index, productInLocalStorage.quantity] && productInCart.id === productInLocalStorage.id) break;
-              {
-                indexFind = true;
+            let [index, productInCart] = cartLocalStorage.entries();
+            if (productInCart.quantity === [index, productInLocalStorage.quantity]);
+            {
+              indexFind = true;
 
-                if ([productInLocalStorage.quantity] > parseInt(articleQuantity.value) <= 100 || [productInLocalStorage.quantity] < parseInt(articleQuantity.value) <= 100) {
-                  [productInLocalStorage.quantity] === parseInt(articleQuantity.value);
-                }
+              if ([productInLocalStorage.quantity] > parseInt([articleQuantity.value]) <= 100 || [productInLocalStorage.quantity] < parseInt([articleQuantity.value]) <= 100) {
+                [productInLocalStorage.quantity] === parseInt([articleQuantity.value]);
               }
             }
+
             if (indexFind) {
               localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
             }
@@ -73,35 +73,108 @@ if (cartLocalStorage === null) {
 
         // Suppression d'élément dans le panier
 
+        deleteItemOfCart();
+
+        function deleteItemOfCart() {
+          return JSON.stringify(localStorage.removeItem("cart"));
+        }
+
         const deleteItem = document.querySelector(".deleteItem");
+        const colorOfProduct = `${productInLocalStorage.color}`;
 
         deleteItem.addEventListener("click", (event) => {
-          let condition = true;
-          if (productInLocalStorage === [productInLocalStorage]) {
-            condition = true;
-          }
-          if (condition) {
-            JSON.stringify(localStorage.removeItem("cart"));
+          if (cartLocalStorage) {
+            let indexFind = false;
+            for (let [index, productInCart] of cartLocalStorage.entries()) {
+              if (productInCart.color === colorOfProduct.value && productInCart.id === id) {
+                indexFind = true;
+
+                if (indexFind) {
+                  deleteItemOfCart();
+                }
+              }
+            }
           }
         });
 
-        // Totaux des prix et articles dans le panier
+        // Total du prix dans le panier
 
-        let totalQuantity = [];
+        const articlePrice = document.querySelector(".cart__item__content__description ");
 
-        for (let article = 0; article < cartLocalStorage.length; article++) {
-          let quantityOfArticleInCart = cartLocalStorage[article].quantity;
+        let priceArticle = [];
 
-          totalQuantity.push(quantityOfArticleInCart);
-          console.log(totalQuantity);
+        for (let products = 0; products < cartLocalStorage.length; products++) break;
+        {
+          let totalPrice = articlePrice.lastElementChild.textContent;
+          priceArticle.push(totalPrice);
+          console.log(totalPrice);
         }
 
-        const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        const totalArticle = totalQuantity.reduce(reducer, 0);
-        console.log(totalArticle);
+        const calcul = (total, valueCurrent) => total + valueCurrent;
+        const totalOnBill = priceArticle.reduce(calcul);
+        console.log(totalOnBill);
 
-        const totalQuantityHTML = `<span id="totalQuantity">${totalArticle}</span>`;
-        totalArticleInCart.insertAdjacentHTML("afterbegin", totalQuantityHTML);
+        const totalPriceHTML = `<span id="totalPrice">${totalOnBill}</span>`;
+        totalPriceOfArticle.insertAdjacentHTML("afterbegin", totalPriceHTML);
       });
   }
+  // Total des articles dans le panier
+
+  let totalQuantity = [];
+
+  for (let article = 0; article < cartLocalStorage.length; article++) {
+    let quantityOfArticleInCart = cartLocalStorage[article].quantity;
+
+    totalQuantity.push(quantityOfArticleInCart);
+    console.log(totalQuantity);
+  }
+
+  const reducer = (addition, currentValue) => addition + currentValue;
+  const totalArticle = totalQuantity.reduce(reducer, 0);
+  console.log(totalArticle);
+
+  const totalQuantityHTML = `<span id="totalQuantity">${totalArticle}</span>`;
+  totalArticleInCart.insertAdjacentHTML("afterbegin", totalQuantityHTML);
 }
+
+// Confirmation du formulaire
+
+const setForm = document.querySelector(".cart__order__form__submit");
+const firstName = document.getElementById("firstName").value == "";
+const errorFirstName = document.getElementById("firstNameErrorMsg");
+const lastName = document.getElementById("lastName").value == "";
+const errorLastName = document.getElementById("lastNameErrorMsg");
+const address = document.getElementById("address").value == "";
+const errorAddress = document.getElementById("addressErrorMsg");
+const city = document.getElementById("city").value == "";
+const errorCity = document.getElementById("cityErrorMsg");
+const email = document.getElementById("email").value == "";
+const errorEmail = document.getElementById("emailErrorMsg");
+
+setForm.addEventListener("submit", (event) => {
+  if (firstName.value || lastName.value || address.value || city.value || email.value) {
+    errorFirstName.innerHTML = "Merci de renseigner ce champ !";
+    errorLastName.innerHTML = "Merci de renseigner ce champ !";
+    errorAddress.innerHTML = "Merci de renseigner ce champ !";
+    errorCity.innerHTML = "Merci de renseigner ce champ !";
+    errorEmail.innerHTML = "Merci de renseigner ce champ !";
+
+    event.preventDefault();
+  }
+
+  const order = [];
+  order.push(cartLocalStorage);
+
+  const buyProduct = {
+    productsOrder: order,
+
+    shopperInformation: {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      address: address.value,
+      city: city.value,
+      email: email.value,
+    },
+  };
+  console.log(buyProduct);
+});
