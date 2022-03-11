@@ -9,6 +9,7 @@ let cartLocalStorage = JSON.parse(localStorage.getItem("cart"));
 
 console.log(cartLocalStorage);
 startUp();
+
 // Génération du Html pour chaque produit ajoutés
 async function startUp() {
   if (cartLocalStorage === null) {
@@ -46,7 +47,6 @@ async function startUp() {
 
     // modification de la quantité dans la page panier
     addArticleOnLocalStorage();
-
     function addArticleOnLocalStorage() {
       const addArticleInCart = document.querySelectorAll(".cart__item__content__settings__quantity");
 
@@ -64,6 +64,10 @@ async function startUp() {
             if (parseInt(event.target.value) > 0 && parseInt(event.target.value) <= 100) {
               cartLocalStorage[indexFind].quantity = parseInt(event.target.value);
               localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+            }
+            if (elem) {
+              totalQuantityInLocalStorage();
+              totalPriceOnBill();
             }
           }
         });
@@ -114,6 +118,8 @@ async function startUp() {
 
       const totalQuantityHTML = `<span id="totalQuantity">${totalArticle}</span>`;
       totalArticleInCart.insertAdjacentHTML("afterbegin", totalQuantityHTML);
+      document.getElementById("totalQuantity").innerHTML = `${totalArticle}`;
+      console.log(document.getElementById("totalQuantity").innerHTML);
     }
 
     // Total du prix dans le panier
@@ -140,6 +146,8 @@ async function startUp() {
       console.log(totalArticle);
       const totalPriceHTML = `<span id="totalPrice">${totalArticle}</span>`;
       totalPriceOfArticle.insertAdjacentHTML("afterbegin", totalPriceHTML);
+      document.getElementById("totalPrice").innerHTML = `${totalArticle}`;
+      console.log(document.getElementById("totalPrice").innerHTML);
     }
   }
 
