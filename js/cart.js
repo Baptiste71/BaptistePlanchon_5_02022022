@@ -1,7 +1,6 @@
 const cartFull = document.getElementById("cart__items");
 const totalArticleInCart = document.getElementById("totalQuantity");
 const totalPriceOfArticle = document.getElementById("totalPrice");
-const rules = /^[a-zA-Z-\s]+$/;
 
 // Recuperation des données du localStorage
 
@@ -156,41 +155,63 @@ async function startUp() {
   formShopper();
 
   function formShopper() {
-    const setForm = document.querySelector(".cart__order__form");
-    const firstName = document.getElementById("firstName").value === "".rules;
-    const errorFirstName = document.getElementById("firstNameErrorMsg");
-    const lastName = document.getElementById("lastName").value === "".rules;
-    const errorLastName = document.getElementById("lastNameErrorMsg");
-    const address = document.getElementById("address").value === "";
-    const errorAddress = document.getElementById("addressErrorMsg");
-    const city = document.getElementById("city").value === "";
-    const errorCity = document.getElementById("cityErrorMsg");
-    const email = document.getElementById("email").value === "";
-    const errorEmail = document.getElementById("emailErrorMsg");
+    const sendForm = document.getElementById("order");
+    let firstName = document.getElementById("firstName");
+    let errorFirstName = document.getElementById("firstNameErrorMsg");
+    let lastName = document.getElementById("lastName");
+    let errorLastName = document.getElementById("lastNameErrorMsg");
+    let address = document.getElementById("address");
+    let errorAddress = document.getElementById("addressErrorMsg");
+    let city = document.getElementById("city");
+    let errorCity = document.getElementById("cityErrorMsg");
+    let email = document.getElementById("email");
+    let errorEmail = document.getElementById("emailErrorMsg");
+    const rules = /^[a-zA-Z]$/;
 
-    setForm.addEventListener("submit", (event) => {
-      if (firstName.value || lastName.value || address.value || city.value || email.value == "") {
-        errorFirstName.innerHTML = "Merci de renseigner ce champ !";
-        errorLastName.innerHTML = "Merci de renseigner ce champ !";
-        errorAddress.innerHTML = "Merci de renseigner ce champ !";
-        errorCity.innerHTML = "Merci de renseigner ce champ !";
-        errorEmail.innerHTML = "Merci de renseigner ce champ par une adresse mail valide !";
-
+    sendForm.addEventListener("click", (event) => {
+      if (!firstName.value || !lastName.value || !address.value || !city.value || !email.value) {
+        errorFirstName.innerHTML = "Merci de renseigner ce champs !";
+        errorLastName.innerHTML = "Merci de renseigner ce champs !";
+        errorAddress.innerHTML = "Merci de renseigner ce champs !";
+        errorCity.innerHTML = "Merci de renseigner ce champs !";
+        errorEmail.innerHTML = "Merci de renseigner ce champs par une addresse email valide !";
         event.preventDefault();
-      } else if (rules.test(firstName.value || lastName.value || address.value || city.value || email.value) == false) {
-        errorFirstName.innerHTML = "Merci de renseigner ce champ !";
-        errorLastName.innerHTML = "Merci de renseigner ce champ !";
-        errorAddress.innerHTML = "Merci de renseigner ce champ !";
-        errorCity.innerHTML = "Merci de renseigner ce champ !";
-        errorEmail.innerHTML = "Merci de renseigner ce champ par une adresse mail valide !";
+      } else {
+        let purchase = [];
+        for (let productPurchase of cartLocalStorage) {
+          purchase.push(productPurchase.id);
+        }
 
+        const shopperInformation = {
+          products: purchase,
+          contact: {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value,
+            email: email.value,
+          },
+        };
+
+        // Requête POST via Fetch
+
+        fetch("http://localhost:3000/api/products/order", {
+          method: "POST",
+          body: JSON.stringify(shopperInformation),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            localStorage.clear();
+            console.log(data);
+            localStorage.setItem("orderId", data.orderId);
+            event.preventDefault();
+          })
+          .catch(function (err) {
+            console.error(err);
+          });
         event.preventDefault();
       }
-      const order = [];
-      order.push(cartLocalStorage);
-      console.log(order);
-
-      const info = {};
     });
   }
 }
