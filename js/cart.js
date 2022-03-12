@@ -206,6 +206,7 @@ async function startUp() {
             console.log(data);
             localStorage.setItem("orderId", data.orderId);
             event.preventDefault();
+            document.location.href = "https://baptiste71.github.io/BaptistePlanchon_5_02022022/html/confirmation.html";
           })
           .catch(function (err) {
             console.error(err);
