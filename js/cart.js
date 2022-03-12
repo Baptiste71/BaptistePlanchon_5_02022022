@@ -98,7 +98,7 @@ async function startUp() {
       });
     }
 
-    // Total des articles dans le panier
+    // Calcul du total des articles dans le panier
     totalQuantityInLocalStorage();
 
     function totalQuantityInLocalStorage() {
@@ -121,7 +121,7 @@ async function startUp() {
       console.log(document.getElementById("totalQuantity").innerHTML);
     }
 
-    // Total du prix dans le panier
+    // Calcul total du prix du panier
 
     totalPriceOnBill();
 
@@ -166,10 +166,66 @@ async function startUp() {
     let errorCity = document.getElementById("cityErrorMsg");
     let email = document.getElementById("email");
     let errorEmail = document.getElementById("emailErrorMsg");
-    const rules = /^[a-zA-Z]$/;
 
+    const rules = /^[a-zA-Z]$/;
+    function checkFirstName() {
+      const validFirstName = firstName.value;
+      if (/^[A-Za-z-]{3,30}$/.test(validFirstName)) {
+        console.log("ok");
+        return true;
+      } else {
+        console.log("ko");
+        errorFirstName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+        return false;
+      }
+    }
+    function checkLastName() {
+      const validLastName = lastName.value;
+      if (/^[A-Za-z-]{3,30}$/.test(validLastName)) {
+        console.log("ok");
+        return true;
+      } else {
+        console.log("ko");
+        errorLastName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+        return false;
+      }
+    }
+    function checkCity() {
+      const validCity = city.value;
+      if (/^[A-Za-z- ]{3,30}$/.test(validCity)) {
+        console.log("ok");
+        return true;
+      } else {
+        console.log("ko");
+        errorCity.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+        return false;
+      }
+    }
+    function checkAddress() {
+      const validAddress = address.value;
+      if (/^[0-9A-Za-z- ]{3,30}$/.test(validAddress)) {
+        console.log("ok");
+        return true;
+      } else {
+        console.log("ko");
+        errorAddress.innerHTML = "Les caractères spéciaux ne sont pas autorisés pour ce champ !";
+        return false;
+      }
+    }
+    function checkEmail() {
+      const validEmail = email.value;
+      if (/^[0-9A-Za-z-@.]{3,30}$/.test(validEmail)) {
+        console.log("ok");
+        return true;
+      } else {
+        errorEmail.innerHTML = "Les caractères spéciaux comme @ et . sont obligatoire pour ce champ !";
+        return false;
+      }
+    }
     sendForm.addEventListener("click", (event) => {
-      if (!firstName.value || !lastName.value || !address.value || !city.value || !email.value) {
+      if ((checkFirstName(), checkLastName(), checkCity(), checkAddress(), checkEmail())) {
+        orderId();
+      } else if (!firstName.value || !lastName.value || !address.value || !city.value || !email.value) {
         errorFirstName.innerHTML = "Merci de renseigner ce champs !";
         errorLastName.innerHTML = "Merci de renseigner ce champs !";
         errorAddress.innerHTML = "Merci de renseigner ce champs !";
@@ -177,6 +233,10 @@ async function startUp() {
         errorEmail.innerHTML = "Merci de renseigner ce champs par une addresse email valide !";
         event.preventDefault();
       } else {
+        event.preventDefault();
+      }
+
+      function orderId() {
         let purchase = [];
         for (let productPurchase of cartLocalStorage) {
           purchase.push(productPurchase.id);
@@ -211,7 +271,6 @@ async function startUp() {
           .catch(function (err) {
             console.error(err);
           });
-        event.preventDefault();
       }
     });
   }
