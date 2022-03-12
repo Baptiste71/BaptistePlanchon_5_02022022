@@ -201,10 +201,10 @@ async function startUp() {
           headers: { "Content-Type": "application/json" },
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then((value) => {
             localStorage.clear();
-            console.log(data);
-            localStorage.setItem("orderId", data.orderId);
+            console.log(value);
+            localStorage.setItem("orderId", JSON.stringify(value));
             event.preventDefault();
             document.location.href = "https://baptiste71.github.io/BaptistePlanchon_5_02022022/html/confirmation.html";
           })
