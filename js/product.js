@@ -42,48 +42,51 @@ function product() {
 }
 
 // Mise en memoire du choix du produit avec sa quantité et sa couleur
+addProductInCart();
 
-const addToCart = document.getElementById("addToCart");
+function addProductInCart() {
+  const addToCart = document.getElementById("addToCart");
 
-addToCart.addEventListener("click", (event) => {
-  const colorChoice = document.getElementById("colors");
-  const quantity = document.getElementById("quantity");
+  addToCart.addEventListener("click", (event) => {
+    const colorChoice = document.getElementById("colors");
+    const quantity = document.getElementById("quantity");
 
-  let newProduct = {
-    id: id,
-    color: colorChoice.value,
-    quantity: parseInt(quantity.value),
-  };
+    let newProduct = {
+      id: id,
+      color: colorChoice.value,
+      quantity: parseInt(quantity.value),
+    };
 
-  if (quantity.value > 0 && quantity.value <= 100 && colorChoice.value) {
-    let cartLocalStorage = JSON.parse(localStorage.getItem("cart"));
+    if (quantity.value > 0 && quantity.value <= 100 && colorChoice.value) {
+      let cartLocalStorage = JSON.parse(localStorage.getItem("cart"));
 
-    if (cartLocalStorage) {
-      let indexFind = false;
-      for (let [index, productInCart] of cartLocalStorage.entries()) {
-        if (productInCart.color === colorChoice.value && productInCart.id === id) {
-          indexFind = true;
+      if (cartLocalStorage) {
+        let indexFind = false;
+        for (let [index, productInCart] of cartLocalStorage.entries()) {
+          if (productInCart.color === colorChoice.value && productInCart.id === id) {
+            indexFind = true;
 
-          if (cartLocalStorage[index].quantity + parseInt(quantity.value) <= 100) {
-            cartLocalStorage[index].quantity += parseInt(quantity.value);
+            if (cartLocalStorage[index].quantity + parseInt(quantity.value) <= 100) {
+              cartLocalStorage[index].quantity += parseInt(quantity.value);
+            }
           }
         }
-      }
-      if (indexFind) {
-        localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+        if (indexFind) {
+          localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+        } else {
+          cartLocalStorage.push(newProduct);
+          localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+        }
       } else {
-        cartLocalStorage.push(newProduct);
-        localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
+        const arrayValue = [
+          {
+            id: id,
+            color: colorChoice.value,
+            quantity: parseInt(quantity.value),
+          },
+        ];
+        localStorage.setItem("cart", JSON.stringify(arrayValue));
       }
-    } else {
-      const arrayValue = [
-        {
-          id: id,
-          color: colorChoice.value,
-          quantity: parseInt(quantity.value),
-        },
-      ];
-      localStorage.setItem("cart", JSON.stringify(arrayValue));
     }
-  }
-});
+  });
+}

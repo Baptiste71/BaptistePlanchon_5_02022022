@@ -94,6 +94,10 @@ async function startUp() {
             canapFinded.remove();
             localStorage.setItem("cart", JSON.stringify(cartLocalStorage));
           }
+          if (elem) {
+            totalQuantityInLocalStorage();
+            totalPriceOnBill();
+          }
         });
       });
     }
@@ -149,129 +153,127 @@ async function startUp() {
       console.log(document.getElementById("totalPrice").innerHTML);
     }
   }
+}
+// Confirmation du formulaire
 
-  // Confirmation du formulaire
+formShopper();
 
-  formShopper();
+function formShopper() {
+  const sendForm = document.getElementById("order");
+  let firstName = document.getElementById("firstName");
+  let errorFirstName = document.getElementById("firstNameErrorMsg");
+  let lastName = document.getElementById("lastName");
+  let errorLastName = document.getElementById("lastNameErrorMsg");
+  let address = document.getElementById("address");
+  let errorAddress = document.getElementById("addressErrorMsg");
+  let city = document.getElementById("city");
+  let errorCity = document.getElementById("cityErrorMsg");
+  let email = document.getElementById("email");
+  let errorEmail = document.getElementById("emailErrorMsg");
 
-  function formShopper() {
-    const sendForm = document.getElementById("order");
-    let firstName = document.getElementById("firstName");
-    let errorFirstName = document.getElementById("firstNameErrorMsg");
-    let lastName = document.getElementById("lastName");
-    let errorLastName = document.getElementById("lastNameErrorMsg");
-    let address = document.getElementById("address");
-    let errorAddress = document.getElementById("addressErrorMsg");
-    let city = document.getElementById("city");
-    let errorCity = document.getElementById("cityErrorMsg");
-    let email = document.getElementById("email");
-    let errorEmail = document.getElementById("emailErrorMsg");
-
-    const rules = /^[a-zA-Z]$/;
-    function checkFirstName() {
-      const validFirstName = firstName.value;
-      if (/^[A-Za-z-]{3,30}$/.test(validFirstName)) {
-        console.log("ok");
-        return true;
-      } else {
-        console.log("ko");
-        errorFirstName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
-        return false;
-      }
+  function checkFirstName() {
+    const validFirstName = firstName.value;
+    if (/^[A-Za-z-]{3,30}$/.test(validFirstName)) {
+      console.log("ok");
+      return true;
+    } else {
+      console.log("ko");
+      errorFirstName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+      return false;
     }
-    function checkLastName() {
-      const validLastName = lastName.value;
-      if (/^[A-Za-z-]{3,30}$/.test(validLastName)) {
-        console.log("ok");
-        return true;
-      } else {
-        console.log("ko");
-        errorLastName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
-        return false;
-      }
-    }
-    function checkCity() {
-      const validCity = city.value;
-      if (/^[A-Za-z- ]{3,30}$/.test(validCity)) {
-        console.log("ok");
-        return true;
-      } else {
-        console.log("ko");
-        errorCity.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
-        return false;
-      }
-    }
-    function checkAddress() {
-      const validAddress = address.value;
-      if (/^[0-9A-Za-z- ]{3,30}$/.test(validAddress)) {
-        console.log("ok");
-        return true;
-      } else {
-        console.log("ko");
-        errorAddress.innerHTML = "Les caractères spéciaux ne sont pas autorisés pour ce champ !";
-        return false;
-      }
-    }
-    function checkEmail() {
-      const validEmail = email.value;
-      if (/^[0-9A-Za-z-@.]{3,30}$/.test(validEmail)) {
-        console.log("ok");
-        return true;
-      } else {
-        errorEmail.innerHTML = "Les caractères spéciaux comme @ et . sont obligatoire pour ce champ !";
-        return false;
-      }
-    }
-    sendForm.addEventListener("click", (event) => {
-      if ((checkFirstName(), checkLastName(), checkCity(), checkAddress(), checkEmail())) {
-        orderId();
-      } else if (!firstName.value || !lastName.value || !address.value || !city.value || !email.value) {
-        errorFirstName.innerHTML = "Merci de renseigner ce champs !";
-        errorLastName.innerHTML = "Merci de renseigner ce champs !";
-        errorAddress.innerHTML = "Merci de renseigner ce champs !";
-        errorCity.innerHTML = "Merci de renseigner ce champs !";
-        errorEmail.innerHTML = "Merci de renseigner ce champs par une addresse email valide !";
-        event.preventDefault();
-      } else {
-        event.preventDefault();
-      }
-
-      function orderId() {
-        let purchase = [];
-        for (let productPurchase of cartLocalStorage) {
-          purchase.push(productPurchase.id);
-        }
-
-        const shopperInformation = {
-          products: purchase,
-          contact: {
-            firstName: firstName.value,
-            lastName: lastName.value,
-            address: address.value,
-            city: city.value,
-            email: email.value,
-          },
-        };
-
-        // Requête POST via Fetch
-
-        fetch("http://localhost:3000/api/products/order", {
-          method: "POST",
-          body: JSON.stringify(shopperInformation),
-          headers: { "Content-Type": "application/json" },
-        })
-          .then((res) => res.json())
-          .then((value) => {
-            localStorage.clear();
-            console.log(value);
-            localStorage.setItem("orderId", JSON.stringify(value));
-            event.preventDefault();
-            document.location.href = "https://baptiste71.github.io/BaptistePlanchon_5_02022022/html/confirmation.html";
-          })
-          .catch(function (err) {
-            console.error(err);
-          });
-      }
-    });
   }
+  function checkLastName() {
+    const validLastName = lastName.value;
+    if (/^[A-Za-z-]{3,30}$/.test(validLastName)) {
+      console.log("ok");
+      return true;
+    } else {
+      console.log("ko");
+      errorLastName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+      return false;
+    }
+  }
+  function checkCity() {
+    const validCity = city.value;
+    if (/^[A-Za-z- ]{3,30}$/.test(validCity)) {
+      console.log("ok");
+      return true;
+    } else {
+      console.log("ko");
+      errorCity.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+      return false;
+    }
+  }
+  function checkAddress() {
+    const validAddress = address.value;
+    if (/^[0-9A-Za-z- ]{3,30}$/.test(validAddress)) {
+      console.log("ok");
+      return true;
+    } else {
+      console.log("ko");
+      errorAddress.innerHTML = "Les caractères spéciaux ne sont pas autorisés pour ce champ !";
+      return false;
+    }
+  }
+  function checkEmail() {
+    const validEmail = email.value;
+    if (/^[0-9A-Za-z-@.]{3,30}$/.test(validEmail)) {
+      console.log("ok");
+      return true;
+    } else {
+      errorEmail.innerHTML = "Les caractères spéciaux comme @ et . sont obligatoire pour ce champ !";
+      return false;
+    }
+  }
+  sendForm.addEventListener("click", (event) => {
+    if ((checkFirstName(), checkLastName(), checkCity(), checkAddress(), checkEmail() === true)) {
+      orderId();
+    } else if (!firstName.value || !lastName.value || !address.value || !city.value || !email.value) {
+      errorFirstName.innerHTML = "Merci de renseigner ce champs !";
+      errorLastName.innerHTML = "Merci de renseigner ce champs !";
+      errorAddress.innerHTML = "Merci de renseigner ce champs !";
+      errorCity.innerHTML = "Merci de renseigner ce champs !";
+      errorEmail.innerHTML = "Merci de renseigner ce champs par une addresse email valide !";
+      event.preventDefault();
+    } else {
+      event.preventDefault();
+    }
+
+    function orderId() {
+      let purchase = [];
+      for (let productPurchase of cartLocalStorage) {
+        purchase.push(productPurchase.id);
+      }
+
+      const shopperInformation = {
+        products: purchase,
+        contact: {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          address: address.value,
+          city: city.value,
+          email: email.value,
+        },
+      };
+
+      // Requête POST via Fetch
+
+      fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(shopperInformation),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((value) => {
+          localStorage.clear();
+          console.log(value);
+          localStorage.setItem("orderId", JSON.stringify(value));
+          event.preventDefault();
+          document.location.href = "https://baptiste71.github.io/BaptistePlanchon_5_02022022/html/confirmation.html";
+        })
+        .catch(function (err) {
+          console.error(err);
+        });
+    }
+  });
 }
