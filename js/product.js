@@ -42,6 +42,7 @@ function product() {
 }
 
 // Mise en memoire du choix du produit avec sa quantité et sa couleur
+
 addProductInCart();
 
 function addProductInCart() {

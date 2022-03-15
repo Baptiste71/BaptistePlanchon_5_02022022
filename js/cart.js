@@ -10,6 +10,7 @@ console.log(cartLocalStorage);
 startUp();
 
 // Génération du Html pour chaque produit ajoutés
+
 async function startUp() {
   if (cartLocalStorage === null) {
   } else {
@@ -44,6 +45,7 @@ async function startUp() {
     cartFull.insertAdjacentHTML("afterbegin", productsInCart);
 
     // modification de la quantité dans la page panier
+
     addArticleOnLocalStorage();
     function addArticleOnLocalStorage() {
       const addArticleInCart = document.querySelectorAll(".cart__item__content__settings__quantity");
@@ -73,6 +75,7 @@ async function startUp() {
     }
 
     // Suppression d'élément dans le panier
+
     deleteArticleOnLocalStorage();
 
     function deleteArticleOnLocalStorage() {
@@ -102,6 +105,7 @@ async function startUp() {
     }
 
     // Calcul du total des articles dans le panier
+
     totalQuantityInLocalStorage();
 
     function totalQuantityInLocalStorage() {
@@ -164,6 +168,8 @@ function formShopper() {
   let email = document.getElementById("email");
   let errorEmail = document.getElementById("emailErrorMsg");
 
+  // Validation du prénom
+
   function checkFirstName() {
     const validFirstName = firstName.value;
     if (/^[A-Za-z-]{3,30}$/.test(validFirstName)) {
@@ -173,6 +179,8 @@ function formShopper() {
       return false;
     }
   }
+
+  // Validation du nom
 
   function checkLastName() {
     const validLastName = lastName.value;
@@ -184,6 +192,8 @@ function formShopper() {
     }
   }
 
+  // Validation de la ville
+
   function checkCity() {
     const validCity = city.value;
     if (/^[A-Za-z- ]{3,30}$/.test(validCity)) {
@@ -194,6 +204,8 @@ function formShopper() {
     }
   }
 
+  // Validation de l'adresse
+
   function checkAddress() {
     const validAddress = address.value;
     if (/^[0-9A-Za-z- ]{3,30}$/.test(validAddress)) {
@@ -203,6 +215,9 @@ function formShopper() {
       return false;
     }
   }
+
+  // Validation de l'Email
+
   function checkEmail() {
     const validEmail = email.value;
     if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(validEmail)) {
@@ -212,6 +227,8 @@ function formShopper() {
       return false;
     }
   }
+
+  // Ecoute du bouton "Commander"
 
   sendForm.addEventListener("click", (event) => {
     event.preventDefault();
@@ -226,6 +243,8 @@ function formShopper() {
       orderId();
     }
   });
+
+  // Création du contenu de la rêquete Fetch Post
 
   function orderId() {
     let purchase = [];

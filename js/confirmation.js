@@ -1,3 +1,5 @@
+// Récupération de l'orderId
+
 let link = new URLSearchParams(document.location.search);
 let id = link.get("id");
 
