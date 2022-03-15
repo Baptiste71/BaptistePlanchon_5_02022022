@@ -12,7 +12,6 @@ startUp();
 // Génération du Html pour chaque produit ajoutés
 async function startUp() {
   if (cartLocalStorage === null) {
-    console.log("je suis vide");
   } else {
     let productsInCart = "";
     for await (let productInLocalStorage of cartLocalStorage) {
@@ -112,17 +111,14 @@ async function startUp() {
         let quantityOfArticleInCart = cartLocalStorage[article].quantity;
 
         totalQuantity.push(quantityOfArticleInCart);
-        console.log(totalQuantity);
       }
 
       const reducer = (addition, currentValue) => addition + currentValue;
       const totalArticle = totalQuantity.reduce(reducer, 0);
-      console.log(totalArticle);
 
       const totalQuantityHTML = `<span id="totalQuantity">${totalArticle}</span>`;
       totalArticleInCart.insertAdjacentHTML("afterbegin", totalQuantityHTML);
-      document.getElementById("totalQuantity").innerHTML = `${totalArticle}`;
-      console.log(document.getElementById("totalQuantity").innerHTML);
+      document.getElementById("totalQuantity").textContent = `${totalArticle}`;
     }
 
     // Calcul total du prix du panier
@@ -140,17 +136,14 @@ async function startUp() {
           {
             let totalPriceOfCart = resJson.price * productInLocalStorage.quantity;
             totalPrice.push(totalPriceOfCart);
-            console.log(totalPrice);
           }
         }
       }
       const reducer = (addition, currentValue) => addition + currentValue;
       const totalArticle = totalPrice.reduce(reducer, 0);
-      console.log(totalArticle);
       const totalPriceHTML = `<span id="totalPrice">${totalArticle}</span>`;
       totalPriceOfArticle.insertAdjacentHTML("afterbegin", totalPriceHTML);
-      document.getElementById("totalPrice").innerHTML = `${totalArticle}`;
-      console.log(document.getElementById("totalPrice").innerHTML);
+      document.getElementById("totalPrice").textContent = `${totalArticle}`;
     }
   }
 }
@@ -174,106 +167,97 @@ function formShopper() {
   function checkFirstName() {
     const validFirstName = firstName.value;
     if (/^[A-Za-z-]{3,30}$/.test(validFirstName)) {
-      console.log("ok");
       return true;
     } else {
-      console.log("ko");
-      errorFirstName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+      errorFirstName.textContent = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
       return false;
     }
   }
+
   function checkLastName() {
     const validLastName = lastName.value;
     if (/^[A-Za-z-]{3,30}$/.test(validLastName)) {
-      console.log("ok");
       return true;
     } else {
-      console.log("ko");
-      errorLastName.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+      errorLastName.textContent = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
       return false;
     }
   }
+
   function checkCity() {
     const validCity = city.value;
     if (/^[A-Za-z- ]{3,30}$/.test(validCity)) {
-      console.log("ok");
       return true;
     } else {
-      console.log("ko");
-      errorCity.innerHTML = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
+      errorCity.textContent = "Les chiffres et caractères spéciaux ne sont pas autorisés pour ce champ !";
       return false;
     }
   }
+
   function checkAddress() {
     const validAddress = address.value;
     if (/^[0-9A-Za-z- ]{3,30}$/.test(validAddress)) {
-      console.log("ok");
       return true;
     } else {
-      console.log("ko");
-      errorAddress.innerHTML = "Les caractères spéciaux ne sont pas autorisés pour ce champ !";
+      errorAddress.textContent = "Les caractères spéciaux ne sont pas autorisés pour ce champ !";
       return false;
     }
   }
   function checkEmail() {
     const validEmail = email.value;
-    if (/^[0-9A-Za-z-@.]{3,30}$/.test(validEmail)) {
-      console.log("ok");
+    if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(validEmail)) {
       return true;
     } else {
-      errorEmail.innerHTML = "Les caractères spéciaux comme @ et . sont obligatoire pour ce champ !";
+      errorEmail.textContent = "Les caractères spéciaux comme @ et . sont obligatoire pour ce champ !";
       return false;
     }
   }
+
   sendForm.addEventListener("click", (event) => {
-    if ((checkFirstName(), checkLastName(), checkCity(), checkAddress(), checkEmail() === true)) {
+    event.preventDefault();
+
+    const isFirstNameValid = checkFirstName();
+    const isLastNameValid = checkLastName();
+    const isCityValid = checkCity();
+    const isAddressValid = checkAddress();
+    const isEmailValid = checkEmail();
+
+    if (isFirstNameValid && isLastNameValid && isCityValid && isAddressValid && isEmailValid) {
       orderId();
-    } else if (!firstName.value || !lastName.value || !address.value || !city.value || !email.value) {
-      errorFirstName.innerHTML = "Merci de renseigner ce champs !";
-      errorLastName.innerHTML = "Merci de renseigner ce champs !";
-      errorAddress.innerHTML = "Merci de renseigner ce champs !";
-      errorCity.innerHTML = "Merci de renseigner ce champs !";
-      errorEmail.innerHTML = "Merci de renseigner ce champs par une addresse email valide !";
-      event.preventDefault();
-    } else {
-      event.preventDefault();
-    }
-
-    function orderId() {
-      let purchase = [];
-      for (let productPurchase of cartLocalStorage) {
-        purchase.push(productPurchase.id);
-      }
-
-      const shopperInformation = {
-        products: purchase,
-        contact: {
-          firstName: firstName.value,
-          lastName: lastName.value,
-          address: address.value,
-          city: city.value,
-          email: email.value,
-        },
-      };
-
-      // Requête POST via Fetch
-
-      fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        body: JSON.stringify(shopperInformation),
-        headers: { "Content-Type": "application/json" },
-      })
-        .then((res) => res.json())
-        .then((value) => {
-          localStorage.clear();
-          console.log(value);
-          localStorage.setItem("orderId", JSON.stringify(value));
-          event.preventDefault();
-          document.location.href = "https://baptiste71.github.io/BaptistePlanchon_5_02022022/html/confirmation.html";
-        })
-        .catch(function (err) {
-          console.error(err);
-        });
     }
   });
+
+  function orderId() {
+    let purchase = [];
+    for (let productPurchase of cartLocalStorage) {
+      purchase.push(productPurchase.id);
+    }
+
+    const shopperInformation = {
+      products: purchase,
+      contact: {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value,
+      },
+    };
+
+    // Requête POST via Fetch
+
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify(shopperInformation),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((value) => {
+        localStorage.clear();
+        window.location.href = `../html/confirmation.html?id=${value.orderId}`;
+      })
+      .catch(function (err) {
+        console.error(err);
+      });
+  }
 }

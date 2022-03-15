@@ -1,14 +1,12 @@
+let link = new URLSearchParams(document.location.search);
+let id = link.get("id");
+
 orderConfirmation();
 
 function orderConfirmation() {
   const numberOfOrder = document.getElementById("orderId");
 
-  let shopperOrder = JSON.parse(localStorage.getItem("orderId"));
-
-  console.log(shopperOrder);
-  let orderIdNumberHTML = `<span id="orderId">${shopperOrder.orderId}</span>`;
+  let orderIdNumberHTML = `<span id="orderId">${id}</span>`;
 
   numberOfOrder.insertAdjacentHTML(`afterbegin`, orderIdNumberHTML);
 }
-
-localStorage.clear();
