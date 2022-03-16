@@ -151,6 +151,7 @@ async function startUp() {
     }
   }
 }
+
 // Confirmation du formulaire
 
 formShopper();
